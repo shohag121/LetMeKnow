@@ -4,9 +4,10 @@ Copyright © 2023 Shazahanul Islam Shohag shohag121@gmail.com
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/shohag121/LetMeKnow/github"
-
+	ghuser "github.com/shohag121/LetMeKnow/user"
 	"github.com/spf13/cobra"
 )
 
@@ -21,13 +22,18 @@ var authCmd = &cobra.Command{
 			fmt.Println("Please login first, using 'letmeknow auth login -t YOURAUTHTOKEN'")
 			return
 		}
-		me, err := github.WhoAmI()
+		resp, err := github.WhoAmI()
 
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		fmt.Println(string(me))
+		var user ghuser.User
+		err = json.Unmarshal(resp, &user)
+		if err != nil {
+			fmt.Println(err)
+		}
+		ghuser.Format(user)
 	},
 }
 
