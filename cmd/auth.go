@@ -27,7 +27,7 @@ var authCmd = &cobra.Command{
 			fmt.Println(err)
 		}
 
-		fmt.Println(me)
+		fmt.Println(string(me))
 	},
 }
 

@@ -40,7 +40,7 @@ func IsAuthenticated() (bool, error) {
 	return true, nil
 }
 
-func WhoAmI() (string, error) {
+func WhoAmI() ([]byte, error) {
 	var nURL = "https://api.github.com/user"
 	resp, err := getInfo(nURL, "")
 
@@ -50,7 +50,7 @@ func WhoAmI() (string, error) {
 	return resp, err
 }
 
-func GetUserNotifications() (string, error) {
+func GetUserNotifications() ([]byte, error) {
 	var nURL = "https://api.github.com/notifications"
 	resp, err := getInfo(nURL, "")
 
@@ -60,13 +60,13 @@ func GetUserNotifications() (string, error) {
 	return resp, err
 }
 
-func getInfo(url string, authToken string) (string, error) {
+func getInfo(url string, authToken string) ([]byte, error) {
 
 	if authToken == "" {
 		newAuthToken, err := getAuthToken()
 		if err != nil {
 			fmt.Println("There was an error getting auth token.", err)
-			return "", err
+			return []byte(""), err
 		}
 		authToken = newAuthToken
 	}
@@ -110,8 +110,8 @@ func getInfo(url string, authToken string) (string, error) {
 	json.Unmarshal(body, &bodyJSON)
 
 	if statusCode != 200 {
-		return "", errors.New(bodyJSON.message)
+		return []byte(""), errors.New(bodyJSON.message)
 	}
 
-	return string(body), nil
+	return body, nil
 }
