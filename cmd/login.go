@@ -5,35 +5,42 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/ggwhite/go-masker"
+	"github.com/shohag121/LetMeKnow/github"
+	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"
 )
 
 // loginCmd represents the login command
 var loginCmd = &cobra.Command{
-	Use:   "login",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:     "login",
+	Short:   "Login by providing your Github access token",
+	Long:    `Login by providing your Github access token. eg: letmeknow login -t <token>`,
+	Example: `letmeknow login -t <token>`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("login called")
+		token := viper.GetString("token")
+		fmt.Println("Checking token...")
+		fmt.Println("Token Provided:", masker.String(masker.MAddress, token))
+		viper.Set("token", token)
+		if auth, err := github.IsAuthenticated(); !auth || err != nil {
+			fmt.Println("You are not authenticated. Please provide a valid token.")
+			return
+		}
+		fmt.Println("Login Successful!")
+		viper.Set("authenticated", true)
+
+		err := viper.WriteConfig()
+		if err != nil {
+			fmt.Println("We have problem saving your token.", err)
+		}
 	},
 }
 
 func init() {
 	authCmd.AddCommand(loginCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// loginCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// loginCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	loginCmd.PersistentFlags().StringP("token", "t", "", "Github access token")
+	loginCmd.MarkPersistentFlagRequired("token")
+	viper.BindPFlag("token", loginCmd.PersistentFlags().Lookup("token"))
 }

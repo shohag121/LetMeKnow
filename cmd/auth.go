@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/shohag121/LetMeKnow/github"
 
 	"github.com/spf13/cobra"
 )
@@ -12,28 +13,24 @@ import (
 // authCmd represents the auth command
 var authCmd = &cobra.Command{
 	Use:   "auth",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Check if you are logged in",
+	Long: `This command checks if you are logged in.
+		If you are not logged in, it will display your GitHub Information`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("auth called")
+		if auth, err := github.IsAuthenticated(); !auth || err != nil {
+			fmt.Println("Please login first, using 'letmeknow auth login -t YOURAUTHTOKEN'")
+			return
+		}
+		me, err := github.WhoAmI()
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println(me)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(authCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// authCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// authCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

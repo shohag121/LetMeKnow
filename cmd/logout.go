@@ -5,35 +5,39 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"
 )
 
 // logoutCmd represents the logout command
 var logoutCmd = &cobra.Command{
-	Use:   "logout",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:     "logout",
+	Short:   "Logout from the GitHub",
+	Long:    ``,
+	Example: `letmeknow auth logout -f`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("logout called")
+		force := viper.GetBool("force")
+		if !force {
+			fmt.Println("Are you sure you want to logout? use `-f` to force logout.")
+			return
+		}
+
+		viper.Set("authenticated", false)
+		viper.Set("token", "")
+		viper.Set("force", false)
+		err := viper.WriteConfig()
+		if err != nil {
+			fmt.Println("error writing config", err)
+			return
+		}
+		fmt.Println("Logged out successfully")
 	},
 }
 
 func init() {
 	authCmd.AddCommand(logoutCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// logoutCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// logoutCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	var force = false
+	logoutCmd.PersistentFlags().BoolVarP(&force, "force", "f", false, "force logout")
+	viper.BindPFlag("force", logoutCmd.PersistentFlags().Lookup("force"))
 }
