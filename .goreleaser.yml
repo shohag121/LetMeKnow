@@ -4,7 +4,7 @@ builds:
       - darwin
       - linux
     goarch:
-      - and64
+      - amd64
       - arm64
     env:
       - CGO_ENABLED=0
@@ -23,7 +23,7 @@ brews:
     homepage: "https://github.com/shohag121/LetMeKnow"
     tap:
       owner: shohag121
-      name: homebrew-shohag121
+      name: homebrew-tap
     commit_author:
       name: shohag121
       email: shohag121@gmail.com
