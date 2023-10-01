@@ -4,7 +4,6 @@ Copyright © 2023 Shazahanul Islam Shohag shohag121@gmail.com
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/shohag121/LetMeKnow/github"
 	"github.com/shohag121/LetMeKnow/notification"
@@ -19,14 +18,8 @@ var listCmd = &cobra.Command{
 	Long: `List all the notifications from GitHub.
 			You can use this command to list all the unread notifications.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		resp, err := github.GetUserNotifications()
+		list, err := github.GetUserNotifications()
 
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		var list []notification.Notification
-		err = json.Unmarshal(resp, &list)
 		if err != nil {
 			fmt.Println(err)
 		}

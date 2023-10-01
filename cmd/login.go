@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/ggwhite/go-masker"
+	"github.com/shohag121/LetMeKnow/cron"
 	"github.com/shohag121/LetMeKnow/github"
 	"github.com/spf13/viper"
 
@@ -33,7 +34,9 @@ var loginCmd = &cobra.Command{
 		err := viper.WriteConfig()
 		if err != nil {
 			fmt.Println("We have problem saving your token.", err)
+			return
 		}
+		cron.AddCronJob()
 	},
 }
 

@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/shohag121/LetMeKnow/cron"
 	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"
@@ -26,12 +27,18 @@ var logoutCmd = &cobra.Command{
 		viper.Set("authenticated", false)
 		viper.Set("token", "")
 		viper.Set("force", false)
+		viper.Set("last_notifications", "")
+		viper.Set("last_result_notifications", "")
+		viper.Set("last_user", "")
+		viper.Set("last_result_user", "")
+
 		err := viper.WriteConfig()
 		if err != nil {
 			fmt.Println("error writing config", err)
 			return
 		}
 		fmt.Println("Logged out successfully")
+		cron.RemoveCronJob()
 	},
 }
 

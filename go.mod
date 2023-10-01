@@ -6,6 +6,7 @@ require (
 	github.com/gen2brain/beeep v0.0.0-20230907135156-1a38885a97fc
 	github.com/ggwhite/go-masker v1.0.9
 	github.com/jedib0t/go-pretty/v6 v6.4.7
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.16.0
 )
