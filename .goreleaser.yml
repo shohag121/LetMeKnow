@@ -1,0 +1,32 @@
+builds:
+  - binary: letmeknow
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - and64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -mod=vendor
+
+release:
+  prerelease: auto
+
+universal_binaries:
+  - replace: true
+
+brews:
+  -
+    name: letmeknow
+    homepage: "https://github.com/shohag121/LetMeKnow"
+    tap:
+      owner: shohag121
+      name: homebrew-shohag121
+    commit_author:
+      name: shohag121
+      email: shohag121@gmail.com
+
+checksum:
+  name_template: 'checksums.txt'
